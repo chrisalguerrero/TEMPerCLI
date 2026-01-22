@@ -1,11 +1,11 @@
 #!/bin/bash
-# TEMPer1F (3553:a001) Installation Script for RHEL 9.7
-# Uses Python-based temper.py which supports newer TEMPer devices
+# TEMPerHUM_V4.1 (3553:a001) Installation Script for RHEL 9.7
+# Uses greg-kodama fork with TEMPer2_V4.1 branch support
 
 set -e
 
-echo "TEMPer1F Installation for RHEL 9.7"
-echo "===================================="
+echo "TEMPerHUM_V4.1 Installation for RHEL 9.7"
+echo "=========================================="
 
 # Check if running as root
 if [[ $EUID -ne 0 ]]; then
@@ -19,20 +19,24 @@ dnf install -y python3 python3-pip git
 
 # Install Python USB library
 echo "Installing Python USB libraries..."
-pip3 install pyusb
+pip3 install pyusb pyserial
 
 # Create working directory
 WORK_DIR="/tmp/temper_install"
 mkdir -p "$WORK_DIR"
 cd "$WORK_DIR"
 
-# Clone the Python-based temper repository
-echo "Cloning temper.py repository..."
+# Clone the Python-based temper repository with V4.1 support
+echo "Cloning temper.py repository with TEMPer2_V4.1 support..."
 if [ -d "temper" ]; then
     rm -rf temper
 fi
-git clone https://github.com/ccwienk/temper.git
+git clone https://github.com/greg-kodama/temper.git
 cd temper
+
+# Checkout the TEMPer2_V4.1 branch
+echo "Checking out TEMPer2_V4.1 branch..."
+git checkout TEMPer2_V4.1
 
 # Make temper.py executable
 chmod +x temper.py
@@ -74,22 +78,21 @@ echo ""
 echo "Installation complete!"
 echo "===================="
 echo ""
-echo "Your TEMPer1F device (3553:a001) is now supported!"
+echo "Your TEMPerHUM_V4.1 device (3553:a001) is now supported!"
 echo ""
 echo "IMPORTANT: You need to log out and log back in for group membership to take effect!"
 echo "Or run: newgrp plugdev"
 echo ""
 echo "After logging back in, unplug and replug your device, then run:"
-echo "  temper-read"
-echo ""
-echo "For JSON output:"
-echo "  temper-read --json"
-echo ""
-echo "To force reading your specific device:"
 echo "  temper-read --force 3553:a001"
 echo ""
-echo "For detailed debugging:"
+echo "For JSON output:"
 echo "  temper-read --force 3553:a001 --json"
+echo ""
+echo "This version supports:"
+echo "  - Temperature reading"
+echo "  - Humidity reading (if your model has it)"
+echo "  - TEMPerHUM_V4.1 firmware"
 echo ""
 
 # Cleanup option
@@ -103,4 +106,4 @@ fi
 
 echo ""
 echo "Quick test (run as root):"
-echo "  /usr/local/bin/temper-read --force 3553:a001"
+echo "  /usr/local/bin/temper-read --force 3553:a001 --json"
