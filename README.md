@@ -23,4 +23,12 @@ Next you can run the following:
 
 `sudo ./temper_rhel9_install.sh`
 
+`sudo cp temper_wrapper.sh /usr/local/bin/temper`
+
+`sudo chmod +x /usr/local/bin/temper`
+
+`sudo cp temper_hum_decoder.py /usr/local/bin/temper-decode`
+
+`sudo chmod +x /usr/local/bin/temper-decode`
+
 You should have the command line tools installed in the /usr/local/bin directory.
